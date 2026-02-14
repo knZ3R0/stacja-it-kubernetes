@@ -2,6 +2,11 @@
 Cel
 
 Uczestnik:
+* 
+```bash
+kubectl delete -f redis-pod.yml
+kubectl apply -f redis-pod.yml
+```
 
 * uruchomi aplikację z manifestów Kubernetes
 ```bash

@@ -11,6 +11,7 @@ model_name = "openai/whisper-small"
 (zamiast)
 
 model_name = "openai/whisper-tiny"
+```
 Uruchom ponownie kontenery:
 
 docker compose up --build

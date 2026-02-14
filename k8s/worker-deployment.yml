@@ -16,3 +16,10 @@ spec:
         - name: worker
           image: wyklad-docker-worker:latest
           imagePullPolicy: Never
+          volumeMounts:
+            - name: worker-data
+              mountPath: /data
+    volumes:
+      - name: worker-data
+        persistentVolumeClaim:
+          claimName: worker-data-pvc

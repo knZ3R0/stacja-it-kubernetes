@@ -16,5 +16,22 @@ spec:
        - name: api
          image: wyklad-docker-api:latest
          imagePullPolicy: Never
+         env: 
+            - name: APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: APP_ENV
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: LOG_LEVEL
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: REDIS_HOST
          ports:
            - containerPort: 7860
+         

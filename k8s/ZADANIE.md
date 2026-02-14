@@ -3,6 +3,10 @@
 Celem zadania jest wdrożenie komponentów aplikacji (API, worker, Redis) w klastrze Kubernetes przy użyciu plików konfiguracyjnych YAML.
 
 ### Kroki
+0. Uruchom komende 
+```bash
+minikube start
+```
 
 1. Wdróż deployment API:
 

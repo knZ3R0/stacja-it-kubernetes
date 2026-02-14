@@ -1,7 +1,7 @@
 from celery import Celery
+from celery import current_task
 import base64
 from pathlib import Path
-import tempfile
 from transformers import pipeline
 
 celery = Celery(
@@ -16,15 +16,24 @@ transcriber = pipeline(
     model="openai/whisper-tiny"
 )
 
+DATA_DIR = Path("/data")
+AUDIO_DIR = DATA_DIR / "audio"
+RESULTS_DIR = DATA_DIR / "results"
+
+AUDIO_DIR.mkdir(parents=True, exist_ok=True)
+RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+
 @celery.task(name="tasks.transcribe_audio")
 def transcribe_audio(audio_b64: str):
+    task_id = getattr(current_task.request, "id", None) or "manual-task"
     audio_bytes = base64.b64decode(audio_b64)
-    with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
-        tmp.write(audio_bytes)
-        tmp_path = Path(tmp.name)
+    audio_path = AUDIO_DIR / f"{task_id}.wav"
+    audio_path.write_bytes(audio_bytes)
 
-    try:
-        result = transcriber(str(tmp_path), return_timestamps=True)
-        return result["text"]
-    finally:
-        tmp_path.unlink(missing_ok=True)
+    result = transcriber(str(audio_path), return_timestamps=True)
+    text = result["text"]
+
+    result_path = RESULTS_DIR / f"{task_id}.txt"
+    result_path.write_text(text, encoding="utf-8")
+
+    return text

@@ -4,15 +4,19 @@ from pathlib import Path
 from celery import Celery
 import gradio as gr
 
+import os
+
 celery = Celery(
     "tasks",
-    broker="redis://redis:6379/0",
-    backend="redis://redis:6379/0"
+    broker=f"redis://{os.getenv('REDIS_HOST', 'redis')}:6379/0",
+    backend=f"redis://{os.getenv('REDIS_HOST', 'redis')}:6379/0"
 )
 
 def transcribe(audio_path: str) -> str:
     if not audio_path:
         return "Brak pliku audio."
+    if os.getenv("APP_ENV") == "dev":
+        print(f"Otrzymano plik audio: {audio_path}")
 
     audio_bytes = Path(audio_path).read_bytes()
     audio_b64 = base64.b64encode(audio_bytes).decode("utf-8")
@@ -41,4 +45,6 @@ ui = gr.Interface(
 
 
 if __name__ == "__main__":
+    if os.getenv("APP_ENV") == "dev":
+        print("Uruchamianie aplikacji w trybie deweloperskim.")
     ui.launch(server_name="0.0.0.0", server_port=7860)

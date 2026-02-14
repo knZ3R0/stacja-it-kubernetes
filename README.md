@@ -1,2 +1,9 @@
-# stacja-it-kubernetes
-# stacja-it-kubernetes
+### 
+
+```
+cd api 
+```
+
+```
+docker build -t api .
+```

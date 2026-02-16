@@ -10,10 +10,10 @@ celery = Celery(
     backend="redis://redis:6379/0"
 )
 
-# Ładowanie modelu ASR Whisper Tiny
+# Ładowanie modelu ASR Whisper Small
 transcriber = pipeline(
     "automatic-speech-recognition",
-    model="openai/whisper-tiny"
+    model="openai/whisper-small"
 )
 
 DATA_DIR = Path("/data")
